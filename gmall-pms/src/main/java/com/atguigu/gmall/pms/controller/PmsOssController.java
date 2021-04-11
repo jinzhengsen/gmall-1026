@@ -8,6 +8,7 @@ import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
 import com.atguigu.gmall.common.bean.ResponseVo;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +59,8 @@ public class PmsOssController {
             respMap.put("dir", dir);
             respMap.put("host", host);
             respMap.put("expire", String.valueOf(expireEndTime / 1000));
-            // respMap.put("expire", formatISO8601Date(expiration));
+        System.out.println("resMap=>"+respMap);
+        // respMap.put("expire", formatISO8601Date(expiration));
         return ResponseVo.ok(respMap);
     }
 }

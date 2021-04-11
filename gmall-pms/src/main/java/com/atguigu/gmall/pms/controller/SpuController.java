@@ -2,6 +2,7 @@ package com.atguigu.gmall.pms.controller;
 
 import java.util.List;
 
+import com.atguigu.gmall.pms.vo.SpuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.atguigu.gmall.pms.entity.SpuEntity;
@@ -33,6 +33,15 @@ public class SpuController {
 
     @Autowired
     private SpuService spuService;
+
+
+    //根据分类id查询spu信息
+    @ApiOperation("spu商品信息查询")
+    @GetMapping("/category/{categoryId}")
+    public ResponseVo<PageResultVo> querySpuByCid(PageParamVo paramVo,@PathVariable("categoryId") Long cid){
+        PageResultVo pageResultVo=spuService.querySpuByCid(paramVo,cid);
+        return ResponseVo.ok(pageResultVo);
+    }
 
     /**
      * 列表
@@ -62,8 +71,10 @@ public class SpuController {
      */
     @PostMapping
     @ApiOperation("保存")
-    public ResponseVo<Object> save(@RequestBody SpuEntity spu){
-		spuService.save(spu);
+    public ResponseVo<Object> save(@RequestBody SpuVo spuVo){
+//        System.out.println("进入bigSave()...");
+//		spuService.save(spu);
+        spuService.bigSave(spuVo);
 
         return ResponseVo.ok();
     }
