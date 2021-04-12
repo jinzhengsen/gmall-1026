@@ -13,6 +13,7 @@ import com.atguigu.gmall.pms.vo.SpuVo;
 import com.atguigu.gmall.sms.vo.SkuSaleVo;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import com.atguigu.gmall.common.bean.PageParamVo;
 
 import com.atguigu.gmall.pms.mapper.SpuMapper;
 import com.atguigu.gmall.pms.service.SpuService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -76,6 +78,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
     private GmallSmsClient gmallSmsClient;
 
     @Override
+    @GlobalTransactional
     public void bigSave(SpuVo spuVo) {
         /// 1.保存spu相关
         // 1.1. 保存spu基本信息 spu_info
@@ -91,10 +94,14 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         /// 2. 保存sku相关信息
         savaSkuInfo(spuVo, spuId);
 
+        // 最后制造异常
+//        int i=10/0;
+
     }
 
     //保存sku信息
-    private void savaSkuInfo(SpuVo spuVo, Long spuId) {
+    @Transactional
+    void savaSkuInfo(SpuVo spuVo, Long spuId) {
         List<SkuVo> skuVos = spuVo.getSkus();
         //判断skus是否为空，如果为空直接返回
         if (CollectionUtils.isEmpty(skuVos)){
@@ -151,7 +158,8 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         });
     }
 
-    private void saveBaseAttr(SpuVo spuVo, Long spuId) {
+    @Transactional
+    void saveBaseAttr(SpuVo spuVo, Long spuId) {
         List<SpuAttrValueVo> baseAttrs = spuVo.getBaseAttrs();
         if (!CollectionUtils.isEmpty(baseAttrs)){
             List<SpuAttrValueEntity> spuAttrValueEntities = baseAttrs.stream().map(spuAttrValueVo -> {
@@ -164,7 +172,8 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
     }
 
     //保存spu的描述信息
-    private void saveSpuDesc(SpuVo spuVo, Long spuId) {
+    @Transactional
+    void saveSpuDesc(SpuVo spuVo, Long spuId) {
         SpuDescEntity spuDescEntity = new SpuDescEntity();
         // 注意：spu_info_desc表的主键是spu_id,需要在实体类中配置该主键不是自增主键
         spuDescEntity.setSpuId(spuId);
@@ -174,7 +183,8 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
     }
 
     //保存spu基本信息
-    private Long saveSpu(SpuVo spuVo) {
+    @Transactional
+    Long saveSpu(SpuVo spuVo) {
         spuVo.setPublishStatus(1);// 默认是已上架
         spuVo.setCreateTime(new Date());
         spuVo.setUpdateTime(spuVo.getCreateTime());
