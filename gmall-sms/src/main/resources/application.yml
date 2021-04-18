@@ -33,7 +33,7 @@ feign:
     enabled: true
 mybatis-plus:
   mapper-locations: classpath:mapper/sms/**/*.xml
-  type-aliases-package: com.atguigu.gmall.sms.entity
+  type-aliases-package: com.atguigu.gmall.sms.com.atguigu.gmall.pms.entity
   global-config:
     db-config:
       id-type: auto

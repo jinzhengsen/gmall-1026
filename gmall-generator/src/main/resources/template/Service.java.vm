@@ -3,7 +3,7 @@ package ${package}.${moduleName}.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import ${package}.common.bean.PageResultVo;
 import ${package}.common.bean.PageParamVo;
-import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.com.atguigu.gmall.pms.entity.${className}Entity;
 
 import java.util.Map;
 

@@ -2,23 +2,18 @@ package com.atguigu.gmall.pms.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.atguigu.gmall.pms.entity.SkuAttrValueEntity;
+
 import com.atguigu.gmall.pms.service.SkuAttrValueService;
 import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.ResponseVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
-
+import com.atguigu.gmall.pms.entity.*;
 /**
  * sku销售属性&值
  *
@@ -33,6 +28,13 @@ public class SkuAttrValueController {
 
     @Autowired
     private SkuAttrValueService skuAttrValueService;
+
+    @ApiOperation("根据spuId查询检索属性及值")
+    @GetMapping("sku/{cid}")
+    public ResponseVo<List<SkuAttrValueEntity>> querySearchAttrValueBySkuId(@PathVariable("cid") Long cid,@RequestParam("skuId") Long skuId){
+       List<SkuAttrValueEntity> skuAttrValueEntities= this.skuAttrValueService.querySearchAttrValueBySkuId(cid,skuId);
+        return ResponseVo.ok(skuAttrValueEntities);
+    }
 
     /**
      * 列表

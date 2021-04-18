@@ -110,21 +110,23 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
 
         skuVos.forEach(skuVo -> {
             // 2.1. 保存sku基本信息
-            SkuEntity skuEntity = new SkuEntity();
-            BeanUtils.copyProperties(skuVo,skuEntity);
+//            SkuEntity skuEntity = new SkuEntity();
+//            BeanUtils.copyProperties(skuVo,skuEntity);
             // 品牌和分类的id需要从spuInfo中获取
-            skuEntity.setBrandId(skuVo.getBrandId());
-            skuEntity.setCategoryId(skuVo.getCategoryId());
+            skuVo.setSpuId(spuId);
+            skuVo.setCategoryId(spuVo.getCategoryId());
+            skuVo.setBrandId(spuVo.getBrandId());
+//            skuEntity.setBrandId(skuVo.getBrandId());
+//            skuEntity.setCategoryId(skuVo.getCategoryId());
             // 获取图片列表
             List<String> images=skuVo.getImages();
             if (!CollectionUtils.isEmpty(images)){
                 // 设置第一张图片作为默认图片
-                skuEntity.setDefaultImage(skuEntity.getDefaultImage()==null?images.get(0):skuEntity.getDefaultImage());
+                skuVo.setDefaultImage(StringUtils.isNotBlank(skuVo.getDefaultImage())?skuVo.getDefaultImage():images.get(0));
             }
-            skuEntity.setSpuId(spuId);
-            this.skuMapper.insert(skuEntity);
+            this.skuMapper.insert(skuVo);
             // 获取skuId
-            Long skuId = skuEntity.getId();
+            Long skuId = skuVo.getId();
 
             // 2.2. 保存sku图片信息
             if (!CollectionUtils.isEmpty(images)){
@@ -153,7 +155,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
             SkuSaleVo skuSaleVo = new SkuSaleVo();
             BeanUtils.copyProperties(skuVo,skuSaleVo);
             skuSaleVo.setSkuId(skuId);
-            gmallSmsClient.saveSkuSaleInfo(skuSaleVo);
+            this.gmallSmsClient.saveSkuSaleInfo(skuSaleVo);
 
         });
     }

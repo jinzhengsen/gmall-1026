@@ -43,6 +43,15 @@ public class SpuController {
         return ResponseVo.ok(pageResultVo);
     }
 
+    @PostMapping("json")
+    @ApiOperation("elasticsearch查询")
+    public ResponseVo<List<SpuEntity>> querySpuByPageJson(@RequestBody PageParamVo paramVo){
+        PageResultVo pageResultVo = spuService.queryPage(paramVo);
+        List<SpuEntity> list = (List<SpuEntity>) pageResultVo.getList();
+        return ResponseVo.ok(list);
+    }
+
+
     /**
      * 列表
      */

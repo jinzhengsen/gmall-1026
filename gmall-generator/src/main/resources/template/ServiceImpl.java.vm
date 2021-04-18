@@ -9,7 +9,7 @@ import ${package}.common.bean.PageResultVo;
 import ${package}.common.bean.PageParamVo;
 
 import ${package}.${moduleName}.mapper.${className}Mapper;
-import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.com.atguigu.gmall.pms.entity.${className}Entity;
 import ${package}.${moduleName}.service.${className}Service;
 
 

@@ -5,8 +5,6 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 import com.atguigu.gmall.wms.entity.WareSkuEntity;
 
-import java.util.Map;
-
 /**
  * 商品库存
  *

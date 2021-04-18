@@ -5,7 +5,7 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 import com.atguigu.gmall.pms.entity.SkuAttrValueEntity;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * sku销售属性&值
@@ -17,5 +17,7 @@ import java.util.Map;
 public interface SkuAttrValueService extends IService<SkuAttrValueEntity> {
 
     PageResultVo queryPage(PageParamVo paramVo);
+
+    List<SkuAttrValueEntity> querySearchAttrValueBySkuId(Long cid, Long skuId);
 }
 

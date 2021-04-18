@@ -5,8 +5,6 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 import com.atguigu.gmall.wms.entity.WareEntity;
 
-import java.util.Map;
-
 /**
  * 仓库信息
  *

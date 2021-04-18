@@ -6,7 +6,6 @@ import com.atguigu.gmall.common.bean.PageParamVo;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 商品三级分类
