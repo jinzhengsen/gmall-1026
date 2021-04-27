@@ -14,6 +14,7 @@ import com.atguigu.gmall.sms.vo.SkuSaleVo;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,8 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
     private SkuAttrValueService skuAttrValueService;
     @Autowired
     private GmallSmsClient gmallSmsClient;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     @GlobalTransactional
@@ -96,6 +99,9 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
 
         // 最后制造异常
 //        int i=10/0;
+
+        this.rabbitTemplate.convertAndSend("PMS_ITEM_EXCHANGE","item.insert",spuId);
+
 
     }
 

@@ -1,6 +1,6 @@
 package ${package}.${moduleName}.mapper;
 
-import ${package}.${moduleName}.com.atguigu.gmall.pms.entity.${className}Entity;
+import ${package}.${moduleName}.entity.${className}Entity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

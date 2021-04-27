@@ -180,7 +180,7 @@ public class GenUtils {
         }
 
         if (template.contains("Entity.java.vm" )) {
-            return packagePath + "com.atguigu.gmall.pms.entity" + File.separator + className + "Entity.java";
+            return packagePath + "entity" + File.separator + className + "Entity.java";
         }
 
         if (template.contains("Dao.java.vm" )) {

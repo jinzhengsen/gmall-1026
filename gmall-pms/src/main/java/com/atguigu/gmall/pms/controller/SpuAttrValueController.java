@@ -28,7 +28,7 @@ public class SpuAttrValueController {
     private SpuAttrValueService spuAttrValueService;
 
     @ApiOperation("根据spuId查询检索属性及值")
-    @GetMapping("spu/{cid}")
+    @GetMapping("category/{cid}")
     public ResponseVo<List<SpuAttrValueEntity>> querySearchAttrValueBySpuId(@PathVariable("cid") Long cid,
                                                                             @RequestParam("spuId") Long spuId){
         List<SpuAttrValueEntity> spuAttrValueEntities=this.spuAttrValueService.querySearchAttrValueBySpuId(cid,spuId);

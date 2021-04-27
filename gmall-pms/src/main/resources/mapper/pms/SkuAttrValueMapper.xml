@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gmall.pms.mapper.SkuAttrValueMapper">
 
+    <sql id="common">sku_id, GROUP_CONCAT(attr_value ORDER BY attr_id asc) as attr_values</sql>
+    
+<!--    public List<Map<String,Object>> querySaleAttrValuesMappingSkuIdBySkuIds(@Param("skuIds") List<Long> skuIds);-->
+    <select id="querySaleAttrValuesMappingSkuIdBySkuIds" resultType="java.util.Map">
+        select <include refid="common"></include>
+        from pms_sku_attr_value
+        <trim prefix="where" prefixOverrides="and|or" suffix="GROUP BY sku_id" suffixOverrides=",">
+            and
+            <if test="skuIds != null">
+                sku_id in
+                <foreach collection="skuIds" item="skuId" separator="," open="(" close=")">#{skuId}</foreach>
+            </if>,
+        </trim>
+
+    </select>
+
+    <!--<select id="querySaleAttrValuesMappingSkuIdBySkuIds" resultType="java.util.Map">
+        select <include refid="common"></include>
+        from  pms_sku_attr_value
+        <trim prefix="where" prefixOverrides="and|or" suffix="GROUP BY sku_id" suffixOverrides=",">
+            and
+            <if test="skuIds != null">
+                sku_id in
+                <foreach collection="skuIds" item="skuId" separator="," open="(" close=")">#{skuId}</foreach>
+            </if>,
+        </trim>
+    </select>-->
 </mapper>

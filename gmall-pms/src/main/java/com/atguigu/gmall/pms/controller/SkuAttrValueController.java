@@ -2,6 +2,7 @@ package com.atguigu.gmall.pms.controller;
 
 import java.util.List;
 
+import com.atguigu.gmall.pms.vo.SaleAttrValueVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,8 +30,29 @@ public class SkuAttrValueController {
     @Autowired
     private SkuAttrValueService skuAttrValueService;
 
+//    根据spuId查询销售属性组合和skuId的映射关系：{'白天白,8G,256G': 10, '白天白,8G,512G': 11}
+    @GetMapping("mapping/{spuId}")
+    public ResponseVo<String> querySaleAttrValuesMappingSkuIdBySpuId(@PathVariable("spuId") Long spuId){
+        String skusJson=this.skuAttrValueService.querySaleAttrValuesMappingSkuIdBySpuId(spuId);
+        return ResponseVo.ok(skusJson);
+    }
+
+//    根据skuId查询当前sku的销售属性：{3: '白天白', 4: '8G', 5: '512G'}
+    @GetMapping("sku/{skuId}")
+    public ResponseVo<List<SkuAttrValueEntity>> querySaleAttrValuesBySkuId(@PathVariable("skuId") Long skuId){
+        List<SkuAttrValueEntity> skuAttrValueEntities = this.skuAttrValueService.list(new QueryWrapper<SkuAttrValueEntity>().eq("sku_id", skuId));
+        return ResponseVo.ok(skuAttrValueEntities);
+    }
+
+//    根据spuId查询spu下所有sku的销售属性
+    @GetMapping("spu/{spuId}")
+    public ResponseVo<List<SaleAttrValueVo>> querySaleAttrValuesBySpuId(@PathVariable("spuId") Long spuId){
+        List<SaleAttrValueVo> saleAttrValueVos= this.skuAttrValueService.querySaleAttrValuesBySpuId(spuId);
+        return ResponseVo.ok(saleAttrValueVos);
+    }
+
     @ApiOperation("根据spuId查询检索属性及值")
-    @GetMapping("sku/{cid}")
+    @GetMapping("category/{cid}")
     public ResponseVo<List<SkuAttrValueEntity>> querySearchAttrValueBySkuId(@PathVariable("cid") Long cid,@RequestParam("skuId") Long skuId){
        List<SkuAttrValueEntity> skuAttrValueEntities= this.skuAttrValueService.querySearchAttrValueBySkuId(cid,skuId);
         return ResponseVo.ok(skuAttrValueEntities);

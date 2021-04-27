@@ -28,6 +28,16 @@ spring:
   redis:
     host: 192.168.88.128
     port: 6379
+
+  rabbitmq:
+    host: 192.168.88.128
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /vh1
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
 feign:
   sentinel:
     enabled: true

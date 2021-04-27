@@ -1,11 +1,19 @@
 package com.atguigu.gmall.pms.service.impl;
 
 import com.atguigu.gmall.pms.entity.AttrEntity;
+import com.atguigu.gmall.pms.entity.SkuAttrValueEntity;
+import com.atguigu.gmall.pms.entity.SpuAttrValueEntity;
 import com.atguigu.gmall.pms.mapper.AttrMapper;
+import com.atguigu.gmall.pms.mapper.SkuAttrValueMapper;
+import com.atguigu.gmall.pms.mapper.SpuAttrValueMapper;
 import com.atguigu.gmall.pms.vo.AttrGroupEntityVo;
+import com.atguigu.gmall.pms.vo.AttrValueVo;
+import com.atguigu.gmall.pms.vo.ItemGroupVo;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +34,12 @@ import javax.annotation.Resource;
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroupEntity> implements AttrGroupService {
     @Resource
     private AttrMapper attrMapper;
+
+    @Resource
+    private SpuAttrValueMapper spuAttrValueMapper;
+
+    @Resource
+    private SkuAttrValueMapper skuAttrValueMapper;
 
     @Override
     public PageResultVo queryPage(PageParamVo paramVo) {
@@ -59,6 +73,98 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
                     .selectList(new QueryWrapper<AttrEntity>().eq("group_id", attrGroupEntity.getId()).eq("type", 1));
             attrGroupEntityVo.setAttrEntities(attrEntities);
             return attrGroupEntityVo;
+        }).collect(Collectors.toList());
+    }
+
+   /* @Override
+    public List<ItemGroupVo> queryGroupWithAttrValuesByCidAndSpuIdAndSkuId(Long cid, Long spuId, Long skuId) {
+        //根据分类id查询出分组
+        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("category_id", cid));
+        if (CollectionUtils.isEmpty(attrGroupEntities)){
+            return null;
+        }
+
+        //遍历分组查询组下的规格参数
+        List<ItemGroupVo> itemGroupVoList = attrGroupEntities.stream().map(attrGroupEntity -> {
+            ItemGroupVo itemGroupVo = new ItemGroupVo();
+            itemGroupVo.setId(attrGroupEntity.getId());
+            itemGroupVo.setName(attrGroupEntity.getName());
+
+            List<AttrEntity> attrEntities = this.attrMapper.selectList(new QueryWrapper<AttrEntity>().eq("group_id", attrGroupEntity.getId()));
+            if (!CollectionUtils.isEmpty(attrEntities)) {
+                List<Long> attrIds = attrEntities.stream().map(AttrEntity::getId).collect(Collectors.toList());
+                List<AttrValueVo> attrs = new ArrayList<>();
+                //查询出基本类型规格参数
+                List<SpuAttrValueEntity> spuAttrValueEntities = this.spuAttrValueMapper.selectList(new QueryWrapper<SpuAttrValueEntity>().in("attr_id", attrIds));
+                if (!CollectionUtils.isEmpty(spuAttrValueEntities)) {
+                    attrs.addAll(spuAttrValueEntities.stream().map(spuAttrValueEntity -> {
+                        AttrValueVo attrValueVo = new AttrValueVo();
+                        BeanUtils.copyProperties(spuAttrValueEntity, attrValueVo);
+                        return attrValueVo;
+                    }).collect(Collectors.toList()));
+                }
+
+                //查询出销售类型规格参数
+                List<SkuAttrValueEntity> skuAttrValueEntities = this.skuAttrValueMapper.selectList(new QueryWrapper<SkuAttrValueEntity>().in("attr_id", attrIds));
+                if (!CollectionUtils.isEmpty(skuAttrValueEntities)) {
+                    attrs.addAll(skuAttrValueEntities.stream().map(skuAttrValueEntity -> {
+                        AttrValueVo attrValueVo = new AttrValueVo();
+                        BeanUtils.copyProperties(skuAttrValueEntity, attrValueVo);
+                        return attrValueVo;
+                    }).collect(Collectors.toList()));
+                }
+
+                itemGroupVo.setAttrs(attrs);
+
+            }
+            return itemGroupVo;
+        }).collect(Collectors.toList());
+        return itemGroupVoList;
+    }*/
+
+    @Override
+    public List<ItemGroupVo> queryGroupWithAttrValuesByCidAndSpuIdAndSkuId(Long cid, Long spuId, Long skuId) {
+        // 根据分类id查询出分组
+        List<AttrGroupEntity> groupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("category_id", cid));
+        if (CollectionUtils.isEmpty(groupEntities)){
+            return null;
+        }
+
+        // 遍历分组查询出组下的规格参数
+        return groupEntities.stream().map(attrGroupEntity -> {
+            ItemGroupVo itemGroupVo = new ItemGroupVo();
+            itemGroupVo.setId(attrGroupEntity.getId());
+            itemGroupVo.setName(attrGroupEntity.getName());
+
+            List<AttrEntity> attrEntities = this.attrMapper.selectList(new QueryWrapper<AttrEntity>().eq("group_id", attrGroupEntity.getId()));
+            if (!CollectionUtils.isEmpty(attrEntities)){
+                List<Long> attrIds = attrEntities.stream().map(AttrEntity::getId).collect(Collectors.toList());
+
+                List<AttrValueVo> attrs = new ArrayList<>();
+                // 查询出基本类型规格参数及值
+                List<SpuAttrValueEntity> spuAttrValueEntities = this.spuAttrValueMapper.selectList(new QueryWrapper<SpuAttrValueEntity>().in("attr_id", attrIds).eq("spu_id", spuId));
+                if (!CollectionUtils.isEmpty(spuAttrValueEntities)){
+                    attrs.addAll(spuAttrValueEntities.stream().map(spuAttrValueEntity -> {
+                        AttrValueVo attrValueVo = new AttrValueVo();
+                        BeanUtils.copyProperties(spuAttrValueEntity, attrValueVo);
+                        return attrValueVo;
+                    }).collect(Collectors.toList()));
+                }
+
+                // 查询出销售类型规格参数及值
+                List<SkuAttrValueEntity> skuAttrValueEntities = this.skuAttrValueMapper.selectList(new QueryWrapper<SkuAttrValueEntity>().in("attr_id", attrIds).eq("sku_id", skuId));
+                if (!CollectionUtils.isEmpty(skuAttrValueEntities)){
+                    attrs.addAll(skuAttrValueEntities.stream().map(skuAttrValueEntity -> {
+                        AttrValueVo attrValueVo = new AttrValueVo();
+                        BeanUtils.copyProperties(skuAttrValueEntity, attrValueVo);
+                        return attrValueVo;
+                    }).collect(Collectors.toList()));
+                }
+
+                itemGroupVo.setAttrs(attrs);
+            }
+
+            return itemGroupVo;
         }).collect(Collectors.toList());
     }
 
